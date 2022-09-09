@@ -13,4 +13,3 @@ PACKAGES = ' \
 RDEPENDS_packagegroup-qti-transceiver = ' \
     transceiver-dlkm \
     '
-DEPENDS += "transceiver-dt"
