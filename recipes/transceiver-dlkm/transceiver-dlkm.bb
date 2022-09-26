@@ -3,7 +3,7 @@ LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/\
 ${LICENSE};md5=801f80980d171dd6425610833a22dbe6"
 
-inherit linux-kernel-base deploy
+inherit linux-kernel-base deploy qdlkm
 
 PR = "r0"
 
@@ -41,12 +41,7 @@ do_install() {
     install -d ${D}/usr/include/
     install -d ${D}/usr/lib/modules/
 
-    ${STAGING_DIR_NATIVE}/usr/libexec/aarch64-oe-linux/gcc/aarch64-oe-linux/9.3.0/strip \
-    --strip-debug ${WORKDIR}/transceiver-driver/drivers/fpc_qsfp.ko
-
-    LD_LIBRARY_PATH=${WORKSPACE}/kernel-${PREFERRED_VERSION_linux-msm}/kernel_platform/prebuilts/kernel-build-tools/linux-x86/lib64/ \
-    ${STAGING_KERNEL_BUILDDIR}/scripts/sign-file sha1 ${STAGING_KERNEL_BUILDDIR}/certs/signing_key.pem \
-    ${STAGING_KERNEL_BUILDDIR}/certs/signing_key.x509 ${WORKDIR}/transceiver-driver/drivers/fpc_qsfp.ko
+    do_strip_and_sign_dlkm ${WORKDIR}/transceiver-driver/drivers/fpc_qsfp.ko
 
     install -m 0755 ${WORKDIR}/transceiver-driver/drivers/fpc_qsfp.ko -D ${WORKDIR}/fpc_qsfp.ko
     install -m 0755 ${WORKDIR}/transceiver-driver/drivers/fpc_qsfp.ko -D ${D}${libdir}/modules/fpc_qsfp.ko
